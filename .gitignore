@@ -1,0 +1,53 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+!gradle/wrapper/gradle-wrapper.jar
+
+# Android Studio captures
+captures/
+
+# Signing files
+*.jks
+*.keystore
+*.pem
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# Crashlytics / Firebase
+crashlytics-build.properties
+fabric.properties
+
+# Google Services
+google-services.json
+app/google-services.json
+
+# Miscellaneous
+*.class
+
+# Room schema (optional: include if you export DB schemas for testing)
+schemas/
+
+# Jetpack Compose previews cache
+.idea/**/preview.cache/
+
+# Android test results
+**/outputs/
+
