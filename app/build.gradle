@@ -73,4 +73,8 @@ dependencies {
 
     // Permissions handling
     implementation libs.dexter
+
+    implementation libs.material
+    implementation libs.appcompat
+    implementation libs.constraintlayout
 }
