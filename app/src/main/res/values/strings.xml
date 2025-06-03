@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">WildlifeTracker</string>
+    <string name="action_button">Capture or Upload</string>
+    <string name="btn_photo">Take Photo</string>
+    <string name="btn_upload">Upload from Gallery</string>
+    <string name="camera_capture">Capture Image</string>
 </resources>
