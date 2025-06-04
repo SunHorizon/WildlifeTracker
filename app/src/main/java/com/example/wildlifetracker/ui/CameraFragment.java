@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 
+import com.example.wildlifetracker.MainActivity;
 import com.example.wildlifetracker.R;
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -70,12 +71,16 @@ public class CameraFragment extends Fragment {
         cameraProviderFuture.addListener(() -> {
             try {
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+
+                // build the preview
                 Preview preview = new Preview.Builder().build();
                 preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
                 imageCapture = new ImageCapture.Builder().build();
 
-                CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
+                CameraSelector cameraSelector = new CameraSelector.Builder()
+                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                        .build();
 
                 cameraProvider.unbindAll();
                 cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
@@ -114,5 +119,16 @@ public class CameraFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         cameraExecutor.shutdown();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        ((MainActivity) requireActivity()).hideBottomBar();
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ((MainActivity) requireActivity()).showBottomBar();
     }
 }

@@ -1,11 +1,16 @@
 package com.example.wildlifetracker.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -13,6 +18,8 @@ import androidx.fragment.app.Fragment;
 import com.example.wildlifetracker.R;
 
 public class CameraUploadChoiceFragment extends Fragment {
+
+    private ActivityResultLauncher<PickVisualMediaRequest> pickMediaLauncher;
 
     public CameraUploadChoiceFragment() {}
 
@@ -26,20 +33,30 @@ public class CameraUploadChoiceFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
+        pickMediaLauncher = registerForActivityResult(
+                new ActivityResultContracts.PickVisualMedia(),
+                uri -> {
+                    if(uri != null){
+                        Log.d("PhotoPicker", "Selected URI: " + uri);
+                        Toast.makeText(getContext(), "Image Selected!", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Log.d("PhotoPicker", "No media selected");
+                    }
+                });
+
         Button takePhoto = view.findViewById(R.id.btn_take_photo);
         Button uploadPhoto = view.findViewById(R.id.btn_upload_photo);
 
-        takePhoto.setOnClickListener(v -> {
-            getParentFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.nav_host_fragment, new CameraFragment())
-                    .addToBackStack(null)
-                    .commit();
-        });
+        takePhoto.setOnClickListener(v -> getParentFragmentManager()
+                .beginTransaction()
+                .replace(R.id.nav_host_fragment, new CameraFragment())
+                .addToBackStack(null)
+                .commit());
 
-        uploadPhoto.setOnClickListener(v -> {
-            // TODO: Trigger image picker intent
-        });
+        // upload photo from gallery
+        uploadPhoto.setOnClickListener(v -> pickMediaLauncher.launch(new PickVisualMediaRequest.Builder()
+                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                .build()));
 
     }
 

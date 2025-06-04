@@ -1,10 +1,12 @@
 package com.example.wildlifetracker;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.wildlifetracker.ui.CameraUploadChoiceFragment;
+import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,4 +37,19 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         });
     }
+
+    public void hideBottomBar(){
+        BottomAppBar bottomAppBar = findViewById(R.id.bottom_app_bar);
+        FloatingActionButton fab = findViewById(R.id.fab_main_action);
+        bottomAppBar.setVisibility(View.GONE);
+        fab.setVisibility(View.GONE);
+    }
+
+    public void showBottomBar(){
+        BottomAppBar bottomAppBar = findViewById(R.id.bottom_app_bar);
+        FloatingActionButton fab = findViewById(R.id.fab_main_action);
+        bottomAppBar.setVisibility(View.VISIBLE);
+        fab.setVisibility(View.VISIBLE);
+    }
+
 }

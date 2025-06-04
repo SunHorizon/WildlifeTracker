@@ -1,21 +1,24 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/camera_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Camera Preview takes the full screen -->
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
-        android:layout_width="1dp"
-        android:layout_height="0dp"
-        android:layout_margin="16dp"
-        android:layout_gravity="center" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
+    <!-- Floating Capture Button at Bottom Center -->
     <Button
         android:id="@+id/btnCapture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/camera_capture"
-        android:layout_gravity="center"
-        android:layout_marginBottom="24dp" />
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:background="@drawable/ic_camera_button_background"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="32dp"
+        android:contentDescription="@string/camera_capture" />
 
-</LinearLayout>
+
+
+</FrameLayout>
