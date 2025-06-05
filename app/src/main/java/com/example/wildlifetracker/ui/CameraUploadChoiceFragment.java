@@ -37,10 +37,23 @@ public class CameraUploadChoiceFragment extends Fragment {
                 new ActivityResultContracts.PickVisualMedia(),
                 uri -> {
                     if(uri != null){
-                        Log.d("PhotoPicker", "Selected URI: " + uri);
                         Toast.makeText(getContext(), "Image Selected!", Toast.LENGTH_SHORT).show();
+
+                        // Pass URI to ImagePreviewFragment
+                        Bundle previewBundle = new Bundle();
+                        previewBundle.putParcelable("image_uri", uri);
+
+                        ImagePreviewFragment previewFragment = new ImagePreviewFragment();
+                        previewFragment.setArguments(previewBundle);
+
+                        requireActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.nav_host_fragment, previewFragment)
+                                .addToBackStack(null)
+                                .commit();
+
                     }else{
-                        Log.d("PhotoPicker", "No media selected");
+                        Toast.makeText(getContext(), "No image selected", Toast.LENGTH_SHORT).show();
                     }
                 });
 

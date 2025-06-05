@@ -1,6 +1,7 @@
 package com.example.wildlifetracker.ui;
 
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -103,8 +104,21 @@ public class CameraFragment extends Fragment {
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults output) {
                         requireActivity().runOnUiThread(() -> {
-                            Toast.makeText(getContext(), "Photo Saved!", Toast.LENGTH_SHORT).show();
-                            // TODO: send photoFile to ML Kit
+                            Uri savedUri = Uri.fromFile(photoFile);
+                            Toast.makeText(getContext(), "Photo Captured", Toast.LENGTH_SHORT).show();
+
+                            Bundle previewBundle = new Bundle();
+                            previewBundle.putParcelable("image_uri", savedUri);
+
+                            ImagePreviewFragment previewFragment = new ImagePreviewFragment();
+                            previewFragment.setArguments(previewBundle);
+
+                            requireActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.nav_host_fragment, previewFragment)
+                                    .addToBackStack(null)
+                                    .commit();
+
                         });
                     }
 

@@ -4,21 +4,19 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.example.wildlifetracker.ui.CameraUploadChoiceFragment;
-import com.google.android.material.bottomappbar.BottomAppBar;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
-
-    private FloatingActionButton fabMainAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        fabMainAction = findViewById(R.id.fab_main_action);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_app_bar);
 
         //Load default screen
         if(savedInstanceState == null){
@@ -27,29 +25,35 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.nav_host_fragment, new CameraUploadChoiceFragment())
                     .commit();
         }
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            Fragment selectedFragment = null;
+            int itemId = item.getItemId();
 
-        // Fab click opens camera/upload choice fragment
-        fabMainAction.setOnClickListener(v -> {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.nav_host_fragment, new CameraUploadChoiceFragment())
-                    .addToBackStack(null)
-                    .commit();
+            if (itemId == R.id.nav_camera) {
+                selectedFragment = new CameraUploadChoiceFragment();
+            } else if (itemId == R.id.nav_gallery) {
+                selectedFragment = null; // Replace with actual fragment
+            } else if (itemId == R.id.nav_settings) {
+                selectedFragment = null; // Replace with actual fragment
+            }
+
+            if (selectedFragment != null) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.nav_host_fragment, selectedFragment)
+                        .commit();
+            }
+            return true;
         });
     }
 
     public void hideBottomBar(){
-        BottomAppBar bottomAppBar = findViewById(R.id.bottom_app_bar);
-        FloatingActionButton fab = findViewById(R.id.fab_main_action);
+        BottomNavigationView bottomAppBar = findViewById(R.id.bottom_app_bar);
         bottomAppBar.setVisibility(View.GONE);
-        fab.setVisibility(View.GONE);
     }
 
     public void showBottomBar(){
-        BottomAppBar bottomAppBar = findViewById(R.id.bottom_app_bar);
-        FloatingActionButton fab = findViewById(R.id.fab_main_action);
+        BottomNavigationView bottomAppBar = findViewById(R.id.bottom_app_bar);
         bottomAppBar.setVisibility(View.VISIBLE);
-        fab.setVisibility(View.VISIBLE);
     }
-
 }
