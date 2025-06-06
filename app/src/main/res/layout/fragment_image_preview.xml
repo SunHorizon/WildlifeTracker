@@ -7,18 +7,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Species label at top -->
+    <TextView
+        android:id="@+id/speciesLabelText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/analyzing"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
 
     <ImageView
         android:id="@+id/image_preview_view"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:scaleType="fitCenter" />
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:scaleType="fitCenter"
+        />
 
     <Button
-        android:id="@+id/btn_analyze"
+        android:id="@+id/btnSaveImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/analyze"
+        android:text="@string/save"
         android:layout_marginTop="16dp" />
 
 </LinearLayout>
