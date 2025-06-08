@@ -1,6 +1,6 @@
 package com.example.wildlifetracker.ui;
 
-import android.app.AlertDialog;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,6 +16,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.wildlifetracker.Database.ImageEntity;
+import com.example.wildlifetracker.Database.imageRepository;
 import com.example.wildlifetracker.R;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.label.ImageLabeler;
@@ -23,7 +25,6 @@ import com.google.mlkit.vision.label.ImageLabeling;
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
 
 import java.io.IOException;
-import java.util.List;
 
 public class ImagePreviewFragment  extends Fragment {
     private ImageView imageView;
@@ -31,6 +32,8 @@ public class ImagePreviewFragment  extends Fragment {
     private Uri imageUri;
     private TextView speciesLabelText;
     private String speciesLabel = "";
+
+    private imageRepository respository;
 
     public ImagePreviewFragment(){}
 
@@ -46,6 +49,7 @@ public class ImagePreviewFragment  extends Fragment {
         imageView = view.findViewById(R.id.image_preview_view);
         btnSaveImage  = view.findViewById(R.id.btnSaveImage);
         speciesLabelText = view.findViewById(R.id.speciesLabelText);
+        respository = new imageRepository(requireContext());
 
 
         if(getArguments() != null){
@@ -90,7 +94,11 @@ public class ImagePreviewFragment  extends Fragment {
     }
 
     private void saveImageData(Uri uri, String label){
-        Toast.makeText(requireContext(), "Saved: " + label, Toast.LENGTH_SHORT).show();
-        // TODO: Add actual saving logic
+        if(uri != null){
+            respository.insertImage(new ImageEntity(uri.toString(), label));
+            Toast.makeText(getContext(), "Image saved to database!", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(requireContext(), "Failed to save image: " , Toast.LENGTH_SHORT).show();
+        }
     }
 }
