@@ -20,6 +20,10 @@ public class imageRepository {
         executor.execute(() -> imageDao.insertImage(image));
     }
 
+    public void deleteImage(ImageEntity image){
+        executor.execute(() -> imageDao.deleteImage(image));
+    }
+
     public List<ImageEntity> getAllImages(){
         return imageDao.getAllImages();
     }

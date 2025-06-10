@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,8 @@ public class ImagePreviewFragment  extends Fragment {
     private TextView speciesLabelText;
     private String speciesLabel = "";
 
+    private ImageButton backButton;
+
     private imageRepository respository;
 
     public ImagePreviewFragment(){}
@@ -49,6 +52,7 @@ public class ImagePreviewFragment  extends Fragment {
         imageView = view.findViewById(R.id.image_preview_view);
         btnSaveImage  = view.findViewById(R.id.btnSaveImage);
         speciesLabelText = view.findViewById(R.id.speciesLabelText);
+        backButton = view.findViewById(R.id.back_button);
         respository = new imageRepository(requireContext());
 
 
@@ -66,6 +70,10 @@ public class ImagePreviewFragment  extends Fragment {
             if(!speciesLabel.isEmpty()){
                 saveImageData(imageUri, speciesLabel);
             }
+        });
+
+        backButton.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager().popBackStack();
         });
     }
 
@@ -97,6 +105,11 @@ public class ImagePreviewFragment  extends Fragment {
         if(uri != null){
             respository.insertImage(new ImageEntity(uri.toString(), label));
             Toast.makeText(getContext(), "Image saved to database!", Toast.LENGTH_SHORT).show();
+            // Navigate back
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.nav_host_fragment, new CameraUploadChoiceFragment())
+                    .commit();
         }else{
             Toast.makeText(requireContext(), "Failed to save image: " , Toast.LENGTH_SHORT).show();
         }

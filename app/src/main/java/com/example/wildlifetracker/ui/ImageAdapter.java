@@ -18,9 +18,15 @@ import java.util.List;
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
     private final List<ImageEntity> imageList;
+    private final OnImageDeleteListener deleteListener;
 
-    public ImageAdapter(List<ImageEntity> imageList){
+    public interface OnImageDeleteListener {
+        void onDelete(ImageEntity image);
+    }
+
+    public ImageAdapter(List<ImageEntity> imageList, OnImageDeleteListener deleteListener){
         this.imageList = imageList;
+        this.deleteListener = deleteListener;
     }
 
     @NonNull
@@ -38,6 +44,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         ImageEntity image = imageList.get(position);
         holder.labelTextView.setText(image.label);
         holder.imageView.setImageURI(Uri.parse(image.imageUri));
+        holder.deleteButton.setOnClickListener(v -> deleteListener.onDelete(image));
     }
 
     @Override
@@ -49,10 +56,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         ImageView imageView;
         TextView labelTextView;
 
+        ImageView deleteButton;
+
         public ImageViewHolder(View itemView){
             super(itemView);
             imageView = itemView.findViewById(R.id.image_view);
             labelTextView = itemView.findViewById(R.id.label_text_view);
+            deleteButton = itemView.findViewById(R.id.delete_button);
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.wildlifetracker.ui;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ public class GalleryFragment extends Fragment {
         return inflater.inflate(R.layout.gallery_fragment, container, false);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onViewCreated(@NonNull View view,
                               @Nullable Bundle savedInstanceState){
@@ -46,7 +48,11 @@ public class GalleryFragment extends Fragment {
                 if(images.isEmpty()){
                     Toast.makeText(getContext(), "No saved images", Toast.LENGTH_SHORT).show();
                 }
-                imageAdapter = new ImageAdapter(images);
+                imageAdapter = new ImageAdapter(images, image -> {
+                    repositoryImage.deleteImage(image);
+                    images.remove(image);
+                    imageAdapter.notifyDataSetChanged();
+                });
                 recyclerView.setAdapter(imageAdapter);
             });
         }).start();

@@ -11,4 +11,5 @@
     <string name="analyzing">Analyzing...</string>
     <string name="save">Save</string>
     <string name="species">Species</string>
+    <string name="delete">Delete</string>
 </resources>

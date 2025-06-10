@@ -2,16 +2,25 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:gravity="center"
+    android:gravity="start"
     android:padding="16dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <ImageButton
+        android:id="@+id/back_button"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="end"
+        android:layout_margin="8dp"
+        android:src="@android:drawable/ic_delete" />
 
     <!-- Species label at top -->
     <TextView
         android:id="@+id/speciesLabelText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:text="@string/analyzing"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -22,9 +31,11 @@
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:scaleType="fitCenter"
+        android:layout_gravity="center"
         />
 
     <Button
+        android:layout_gravity="center"
         android:id="@+id/btnSaveImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
