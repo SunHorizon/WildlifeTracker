@@ -20,9 +20,11 @@ import com.bumptech.glide.Glide;
 import com.example.wildlifetracker.Database.ImageEntity;
 import com.example.wildlifetracker.Database.imageRepository;
 import com.example.wildlifetracker.R;
+import com.google.mlkit.common.model.LocalModel;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.label.ImageLabeler;
 import com.google.mlkit.vision.label.ImageLabeling;
+import com.google.mlkit.vision.label.custom.CustomImageLabelerOptions;
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
 
 import java.io.IOException;
@@ -80,7 +82,19 @@ public class ImagePreviewFragment  extends Fragment {
     public void identifyImage(Uri imageUri){
         try{
             InputImage image = InputImage.fromFilePath(getContext(), imageUri);
-            ImageLabeler labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS);
+//            ImageLabeler labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS);
+
+            LocalModel localModel = new LocalModel.Builder()
+                    .setAssetFilePath("uas.tflite")
+                    .build();
+
+            CustomImageLabelerOptions options =
+                    new CustomImageLabelerOptions.Builder(localModel)
+                            .setConfidenceThreshold(0.5f)
+                            .setMaxResultCount(3)
+                            .build();
+
+            ImageLabeler labeler = ImageLabeling.getClient(options);
 
             labeler.process(image)
                     .addOnSuccessListener(imageLabels -> {

@@ -9,6 +9,10 @@ android {
     namespace 'com.example.wildlifetracker'
     compileSdk 35
 
+    aaptOptions {
+        noCompress "tflite"
+    }
+
     defaultConfig {
         applicationId "com.example.wildlifetracker"
         minSdk 24
@@ -51,6 +55,7 @@ dependencies {
 
     // ML Kit
     implementation libs.image.labeling
+    implementation libs.image.labeling.custom
 
     // CameraX
     implementation libs.camera.camera2
