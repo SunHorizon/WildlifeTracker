@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.wildlifetracker.ui.CameraUploadChoiceFragment;
 import com.example.wildlifetracker.ui.GalleryFragment;
+import com.example.wildlifetracker.ui.MapFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment = new CameraUploadChoiceFragment();
             } else if (itemId == R.id.nav_gallery) {
                 selectedFragment =  new GalleryFragment();
-            } else if (itemId == R.id.nav_settings) {
-                selectedFragment = null; // Replace with actual fragment
+            } else if (itemId == R.id.nav_map) {
+                selectedFragment = new MapFragment();
             }
 
             if (selectedFragment != null) {

@@ -3,9 +3,14 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
 }
 
-android {
-    def MAPS_API_KEY = project.hasProperty("MAPS_API_KEY") ? project.MAPS_API_KEY : ""
+def localProperties = new Properties();
+def localPropertiesFile = rootProject.file("local.properties");
+if(localPropertiesFile.exists()){
+    localProperties.load(new FileInputStream(localPropertiesFile))
+}
+def mapsApiKey = localProperties.getProperty("MAPS_API_KEY") ?: ""
 
+android {
     namespace 'com.example.wildlifetracker'
     compileSdk 35
 
@@ -22,7 +27,9 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        manifestPlaceholders = [ "MAPS_API_KEY": MAPS_API_KEY ]
+        manifestPlaceholders = [
+                MAPS_API_KEY: mapsApiKey
+        ]
     }
 
     buildTypes {

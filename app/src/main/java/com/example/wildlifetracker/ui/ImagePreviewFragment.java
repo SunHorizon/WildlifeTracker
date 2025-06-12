@@ -82,19 +82,19 @@ public class ImagePreviewFragment  extends Fragment {
     public void identifyImage(Uri imageUri){
         try{
             InputImage image = InputImage.fromFilePath(getContext(), imageUri);
-//            ImageLabeler labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS);
+            ImageLabeler labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS);
 
-            LocalModel localModel = new LocalModel.Builder()
-                    .setAssetFilePath("uas.tflite")
-                    .build();
-
-            CustomImageLabelerOptions options =
-                    new CustomImageLabelerOptions.Builder(localModel)
-                            .setConfidenceThreshold(0.5f)
-                            .setMaxResultCount(3)
-                            .build();
-
-            ImageLabeler labeler = ImageLabeling.getClient(options);
+//            LocalModel localModel = new LocalModel.Builder()
+//                    .setAssetFilePath("uas.tflite")
+//                    .build();
+//
+//            CustomImageLabelerOptions options =
+//                    new CustomImageLabelerOptions.Builder(localModel)
+//                            .setConfidenceThreshold(0.5f)
+//                            .setMaxResultCount(3)
+//                            .build();
+//
+//            ImageLabeler labeler = ImageLabeling.getClient(options);
 
             labeler.process(image)
                     .addOnSuccessListener(imageLabels -> {
