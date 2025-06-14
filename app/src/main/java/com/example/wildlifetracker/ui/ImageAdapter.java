@@ -13,7 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.wildlifetracker.Database.ImageEntity;
 import com.example.wildlifetracker.R;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
@@ -42,9 +46,19 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position){
         ImageEntity image = imageList.get(position);
-        holder.labelTextView.setText(image.label);
+
+        holder.labelTextView.setText(String.format("Species: %s", image.label));
+        holder.timestamp.setText(String.format("Date: %s", formatDate(image.timestamp)));
+        holder.location.setText(String.format("Location: %s, %s", image.latitude, image.longitude));
+        holder.notes.setText(String.format("Notes: %s", image.notes != null ? image.notes : "None"));
+
         holder.imageView.setImageURI(Uri.parse(image.imageUri));
         holder.deleteButton.setOnClickListener(v -> deleteListener.onDelete(image));
+    }
+
+    private String formatDate(long millis) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault());
+        return sdf.format(new Date(millis));
     }
 
     @Override
@@ -54,8 +68,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     static class ImageViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView labelTextView;
-
+        TextView labelTextView, timestamp, location, notes;
         ImageView deleteButton;
 
         public ImageViewHolder(View itemView){
@@ -63,6 +76,9 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
             imageView = itemView.findViewById(R.id.image_view);
             labelTextView = itemView.findViewById(R.id.label_text_view);
             deleteButton = itemView.findViewById(R.id.delete_button);
+            timestamp = itemView.findViewById(R.id.text_timestamp);
+            location = itemView.findViewById(R.id.text_location);
+            notes = itemView.findViewById(R.id.text_notes);
         }
     }
 }

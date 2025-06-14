@@ -12,10 +12,19 @@ public class ImageEntity {
 
     public String imageUri;
     public String label;
+    public long timestamp;
+    public Double longitude;
+    public Double latitude;
+    public String notes;
 
-    public ImageEntity(String imageUri, String label){
+
+    public ImageEntity(String imageUri, String label, long timestamp, Double longitude, Double latitude, String notes){
         this.imageUri = imageUri;
         this.label = label;
+        this.timestamp = timestamp;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.notes = notes;
     }
 
 }

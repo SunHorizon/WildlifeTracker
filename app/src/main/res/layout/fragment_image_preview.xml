@@ -34,6 +34,14 @@
         android:layout_gravity="center"
         />
 
+    <EditText
+        android:id="@+id/editNotes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Add Notes about this sighting"
+        android:inputType="textMultiLine"
+        android:padding="12dp"/>
+
     <Button
         android:layout_gravity="center"
         android:id="@+id/btnSaveImage"

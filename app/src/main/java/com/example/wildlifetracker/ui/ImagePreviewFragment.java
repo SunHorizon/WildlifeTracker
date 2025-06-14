@@ -1,12 +1,15 @@
 package com.example.wildlifetracker.ui;
 
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,12 +17,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.example.wildlifetracker.Database.ImageEntity;
 import com.example.wildlifetracker.Database.imageRepository;
 import com.example.wildlifetracker.R;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.mlkit.common.model.LocalModel;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.label.ImageLabeler;
@@ -28,6 +34,7 @@ import com.google.mlkit.vision.label.custom.CustomImageLabelerOptions;
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
 
 import java.io.IOException;
+import java.util.concurrent.Executors;
 
 public class ImagePreviewFragment  extends Fragment {
     private ImageView imageView;
@@ -39,6 +46,9 @@ public class ImagePreviewFragment  extends Fragment {
     private ImageButton backButton;
 
     private imageRepository respository;
+    private EditText notesField;
+
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
     public ImagePreviewFragment(){}
 
@@ -56,7 +66,8 @@ public class ImagePreviewFragment  extends Fragment {
         speciesLabelText = view.findViewById(R.id.speciesLabelText);
         backButton = view.findViewById(R.id.back_button);
         respository = new imageRepository(requireContext());
-
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+        notesField = view.findViewById(R.id.editNotes);
 
         if(getArguments() != null){
             imageUri = getArguments().getParcelable("image_uri");
@@ -70,7 +81,8 @@ public class ImagePreviewFragment  extends Fragment {
 
         btnSaveImage.setOnClickListener(v -> {
             if(!speciesLabel.isEmpty()){
-                saveImageData(imageUri, speciesLabel);
+                String notes = notesField.getText().toString();
+                saveImageData(imageUri, speciesLabel, notes);
             }
         });
 
@@ -81,7 +93,7 @@ public class ImagePreviewFragment  extends Fragment {
 
     public void identifyImage(Uri imageUri){
         try{
-            InputImage image = InputImage.fromFilePath(getContext(), imageUri);
+            InputImage image = InputImage.fromFilePath(requireContext(), imageUri);
             ImageLabeler labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS);
 
 //            LocalModel localModel = new LocalModel.Builder()
@@ -115,15 +127,31 @@ public class ImagePreviewFragment  extends Fragment {
         }
     }
 
-    private void saveImageData(Uri uri, String label){
+    private void saveImageData(Uri uri, String label, String notes){
         if(uri != null){
-            respository.insertImage(new ImageEntity(uri.toString(), label));
-            Toast.makeText(getContext(), "Image saved to database!", Toast.LENGTH_SHORT).show();
-            // Navigate back
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.nav_host_fragment, new CameraUploadChoiceFragment())
-                    .commit();
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(requireActivity(),
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        101);
+            }else {
+                fusedLocationProviderClient.getLastLocation()
+                        .addOnSuccessListener(location -> {
+                            double lat = (location != null) ? location.getLatitude() : 0.0;
+                            double lon = (location != null) ? location.getLongitude() : 0.0;
+                            long timestamp = System.currentTimeMillis();
+                            ImageEntity entity = new ImageEntity(uri.toString(), label, timestamp, lon, lat, notes);
+                            respository.insertImage(entity);
+                            Toast.makeText(getContext(), "Sighting saved", Toast.LENGTH_SHORT).show();
+
+                            // Navigate back
+                            requireActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.nav_host_fragment, new CameraUploadChoiceFragment())
+                                    .commit();
+                        });
+            }
+
         }else{
             Toast.makeText(requireContext(), "Failed to save image: " , Toast.LENGTH_SHORT).show();
         }
