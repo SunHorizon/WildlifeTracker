@@ -8,13 +8,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.wildlifetracker.Database.ImageEntity;
+import com.example.wildlifetracker.Database.imageRepository;
 import com.example.wildlifetracker.R;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.List;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
@@ -33,12 +36,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap){
-//        map = googleMap;
-//        LatLng defaultLocation = new LatLng(43.6532, -79.3832);
-//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
-        googleMap.addMarker(new MarkerOptions()
-                .position(new LatLng(0, 0))
-                .title("Marker"));
-    }
+        new Thread(() -> {
 
+            imageRepository entity = new imageRepository(requireContext());
+            List<ImageEntity> images = entity.getAllImages();
+
+            requireActivity().runOnUiThread(()  -> {
+                for(ImageEntity image : images){
+                    if(image.latitude != 0 && image.longitude != 0){
+                        LatLng position = new LatLng(image.latitude, image.longitude);
+                        String title = image.label != null ? image.label : "Unknown Species";
+                        MarkerOptions markerOptions = new MarkerOptions().position(position).title(title).snippet(image.notes);
+                        googleMap.addMarker(markerOptions);
+                    }
+                }
+            });
+        }).start();
+    }
 }
